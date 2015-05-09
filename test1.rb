@@ -43,13 +43,36 @@ inner_results = db.execute("select date from stock_prices as s2 order by date de
 
 latest_date = inner_results[0]['date']
 
+#main_results = db.execute("
+#select companies.*, closing_price as latest_closing_price
+#from companies
+#inner join stock_prices
+#on company_id = companies.id
+#where date = '#{latest_date}'")
+
+#print main_results
+
+# you can filter the results in the ruby loop
+
+#main_results.each{|row| puts "#{row['name']} is in the #{row['sector']} industry and was last priced at $#{row['latest_closing_price']}" if row['latest_closing_price'].to_i > 100}
+
+
+# or you can filter them in the sql statement
+
 main_results = db.execute("
 select companies.*, closing_price as latest_closing_price
 from companies
 inner join stock_prices
 on company_id = companies.id
-where date = '#{latest_date}'")
+where date = '#{latest_date}' AND latest_closing_price > 200")
 
-#print main_results
+main_results.each do |row|
+puts "#{row['name']} had a closing price of $#{row['latest_closing_price']}"
+end
 
-main_results.each{|row| puts "#{row['name']} is in the #{row['sector']} industry and was last priced at $#{row['latest_closing_price']}" if row['latest_closing_price'].to_i > 100}
+
+
+
+
+
+
